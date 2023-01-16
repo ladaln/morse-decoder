@@ -38,21 +38,21 @@ const MORSE_TABLE = {
 };
 
 function decode(expr) {
-     let result = "";
-    let char;
-
-    for(let i = 0; i < expr.length; i += 10){
-        char = "";
-
-        if(expr[i] == "*")
-            char = " ";
-        else
-            for(let j = 0; j < 10; j+=2)
-                if(expr[i + j] == 1) char += expr[i + j + 1] == 1 ? "-" : ".";
-    
-        result += (MORSE_TABLE[char] ?? char);
+ let res = '';
+  for (let i = 0; i < expr.length / 10; i++) {
+    let chunk = expr.slice(i * 10, i * 10 + 10);
+    if (chunk[0] === '*') {
+      res += ' ';
+      continue;
     }
-    return result;
+    let code = '';
+    for (let j = 0; j < 10; j += 2) {
+      if (chunk.slice(j, j + 2) === '10') code += '.';
+      else if (chunk.slice(j, j + 2) === '11') code += '-';
+    }
+    res += MORSE_TABLE[code];
+  }
+  return res;
 }
 
 module.exports = {
